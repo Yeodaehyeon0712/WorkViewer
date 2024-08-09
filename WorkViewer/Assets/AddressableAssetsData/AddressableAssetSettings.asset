@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 468a46d0ae32c3544b7d98094e6448a9, type: 3}
   m_Name: AddressableAssetSettings
   m_EditorClassIdentifier: 
-  m_DefaultGroup: 353a559cd7e3e0c4eaba227ff6233124
+  m_DefaultGroup: 6516a22490ba1fe4e8c1a1e3220b2a96
   m_CachedHash:
     serializedVersion: 2
     Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
-  m_BuildRemoteCatalog: 0
+  m_BuildRemoteCatalog: 1
   m_BundleLocalCatalog: 0
   m_CatalogRequestsTimeout: 0
   m_DisableCatalogUpdateOnStart: 0
@@ -34,15 +34,15 @@ MonoBehaviour:
   m_MonoScriptBundleNaming: 0
   m_MonoScriptBundleCustomNaming: 
   m_RemoteCatalogBuildPath:
-    m_Id: 
+    m_Id: 9a313164c77ab0043b82bb07521ce466
   m_RemoteCatalogLoadPath:
-    m_Id: 
+    m_Id: ae8b4db6bd6395a4bbb6f15f02dba2f6
   m_ContentStateBuildPath: 
   m_BuildAddressablesWithPlayerBuild: 0
-  m_overridePlayerVersion: 
+  m_overridePlayerVersion: 1
   m_GroupAssets:
   - {fileID: 11400000, guid: 13c6bc40262837440b99f7e617cbbff6, type: 2}
-  - {fileID: 11400000, guid: b7fd01c0fd20e8a479d92e3b1e5ba5b8, type: 2}
+  - {fileID: 11400000, guid: b93d2ef174f6f3d41a5ccd68ae2b7068, type: 2}
   m_BuildSettings:
     m_CompileScriptsInVirtualMode: 0
     m_CleanupStreamingAssetsAfterBuilds: 1
@@ -64,6 +64,20 @@ MonoBehaviour:
         m_Value: ServerData/[BuildTarget]
       - m_Id: ae8b4db6bd6395a4bbb6f15f02dba2f6
         m_Value: http://[PrivateIpAddress]:[HostingServicePort]
+    - m_InheritedParent: 
+      m_Id: 063af0e7134ff684b81e6d2df67d0ac1
+      m_ProfileName: Firebase_Test
+      m_Values:
+      - m_Id: 7f38fa3404e2e6247bde2d8dc782422e
+        m_Value: '[UnityEditor.EditorUserBuildSettings.activeBuildTarget]'
+      - m_Id: cbc362acca898e64a8de2f644dac4372
+        m_Value: '[UnityEngine.AddressableAssets.Addressables.BuildPath]/[BuildTarget]'
+      - m_Id: 0f58692d88e75f545a6f5183b2ed3c44
+        m_Value: '{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]'
+      - m_Id: 9a313164c77ab0043b82bb07521ce466
+        m_Value: ServerData/Test/[BuildTarget]
+      - m_Id: ae8b4db6bd6395a4bbb6f15f02dba2f6
+        m_Value: gs://workviewer-b88f3.appspot.com/Test/[BuildTarget]
     m_ProfileEntryNames:
     - m_Id: 7f38fa3404e2e6247bde2d8dc782422e
       m_Name: BuildTarget
@@ -97,7 +111,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a5f85396cf4272040a3774b9f8618360, type: 2}
   - {fileID: 11400000, guid: a1700a7d364c1f44a91c30098f88e68d, type: 2}
   - {fileID: 11400000, guid: a3a907d417e4eb4409d376f9d9ca7b41, type: 2}
-  m_ActiveProfileId: fb551d17900c09c43ab11a352f3bd452
+  - {fileID: 11400000, guid: ff06f1250a9cb7b47982483edf590ef7, type: 2}
+  m_ActiveProfileId: 063af0e7134ff684b81e6d2df67d0ac1
   m_HostingServicesManager:
     m_HostingServiceInfos: []
     m_Settings: {fileID: 11400000}
