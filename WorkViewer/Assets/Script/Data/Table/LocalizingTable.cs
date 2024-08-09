@@ -8,7 +8,7 @@ public class LocalizingTable : TableBase
     public string this[int index] {
         get {
             if (_localizingDic.ContainsKey(index))
-                return _localizingDic[index][LocalizeManager.Instance.CurrentLanguage];
+                return _localizingDic[index][LocalizingManager.Instance.CurrentLanguage];
 
             return null;
         }
