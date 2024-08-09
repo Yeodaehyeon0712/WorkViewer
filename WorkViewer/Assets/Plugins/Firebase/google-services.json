@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "344027026435",
+    "project_id": "workviewer-b88f3",
+    "storage_bucket": "workviewer-b88f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:344027026435:android:ba3ed44ae8eae38cf4aa36",
+        "android_client_info": {
+          "package_name": "com.oey.WorkViewer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAlU7xNQFwJGYQSkmd62_w2D565XwSRHSE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
