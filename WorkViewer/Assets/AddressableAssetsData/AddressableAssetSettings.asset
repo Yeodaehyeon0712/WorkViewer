@@ -98,6 +98,7 @@ MonoBehaviour:
   m_LabelTable:
     m_LabelNames:
     - default
+    - Model
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 42206b7404e750f498c78f379619488e, type: 2}
@@ -105,7 +106,7 @@ MonoBehaviour:
   m_CertificateHandlerType:
     m_AssemblyName: 
     m_ClassName: 
-  m_ActivePlayerDataBuilderIndex: 3
+  m_ActivePlayerDataBuilderIndex: 4
   m_DataBuilders:
   - {fileID: 11400000, guid: 4a2d270ed4aa39f44bd54d604fd02fd5, type: 2}
   - {fileID: 11400000, guid: a5f85396cf4272040a3774b9f8618360, type: 2}
