@@ -21,8 +21,8 @@ public class LocalizingTable : TableBase
             if (!_localizingDic.ContainsKey(contents.Key))
                 _localizingDic.Add(contents.Key, new Dictionary<eLanguage, string>());
 
-            _localizingDic[contents.Key].Add(eLanguage.Korean, contents.Value["KR"].Replace("\\n", "\n").Replace("P!0",","));
             _localizingDic[contents.Key].Add(eLanguage.English, contents.Value["EN"].Replace("\\n", "\n").Replace("P!0", ","));
+            _localizingDic[contents.Key].Add(eLanguage.Korean, contents.Value["KR"].Replace("\\n", "\n").Replace("P!0",","));
         }
     }
 }
