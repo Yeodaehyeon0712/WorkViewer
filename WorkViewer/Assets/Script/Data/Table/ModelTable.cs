@@ -7,17 +7,17 @@ namespace Data
     public class ModelData
     {
         public long Index;
-        public string NameKey;
-        public string MadeByKey;
-        public string DescriptionKey;
+        public long NameKey;
+        public long MadeByKey;
+        public long DescriptionKey;
         public string ResourcePath;
 
         public ModelData(long index,Dictionary<string, string> dataPair)
         {
             Index = index;
-            NameKey = dataPair["NameKey"];
-            MadeByKey = dataPair["MakerKey"];
-            DescriptionKey = dataPair["DescriptionKey"];
+            NameKey = long.Parse(dataPair["NameKey"]);
+            MadeByKey = long.Parse(dataPair["MakerKey"]);
+            DescriptionKey = long.Parse(dataPair["DescriptionKey"]);
             ResourcePath = dataPair["ResourcePath"];
         }
     }

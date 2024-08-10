@@ -15,7 +15,7 @@ public class ModelManager : TSingletonMono<ModelManager>
     int currentModelIndex=1;
     int maxModelIndex;
 
-    int bufferSize = 4;
+    int bufferSize = 5;
     int minResetBufferIndex;
     int maxResetBufferIndex;
     #endregion
