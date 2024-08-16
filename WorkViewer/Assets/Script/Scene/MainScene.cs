@@ -1,23 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cysharp.Threading.Tasks;
 
 public class MainScene : BaseScene
 {
     public override void StartScene()
     {
-        Debug.Log("Scene Change");
+        InitManager().Forget();
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    async UniTask InitManager()
+    {       
+        ModelManager.Instance.Initialize();
+        await UniTask.WaitUntil(() => ModelManager.Instance.IsLoad);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        UIManager.Instance.Initialize();
+        await UniTask.WaitUntil(() => UIManager.Instance.IsLoad);
+        Debug.Log("Main Scene Manager Init Complete");
+        //완료창을 보여줌 
     }
 }
