@@ -18,6 +18,5 @@ public class MainScene : BaseScene
         UIManager.Instance.Initialize();
         await UniTask.WaitUntil(() => UIManager.Instance.IsLoad);
         Debug.Log("Main Scene Manager Init Complete");
-        //완료창을 보여줌 
     }
 }

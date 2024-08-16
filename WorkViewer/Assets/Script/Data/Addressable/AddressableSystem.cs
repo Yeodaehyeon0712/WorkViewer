@@ -7,11 +7,14 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
+using Cysharp.Threading.Tasks;
+using System;
 
 public class AddressableSystem
 {
     eAddressableState state;
     public bool IsLoad;
+    Dictionary<string, GameObject> _modelContainer = new Dictionary<string, GameObject>();
     public void Initialize()
     {
         Addressables.ResourceManager.ResourceProviders.Add(new FirebaseStorageAssetBundleProvider());
@@ -24,7 +27,10 @@ public class AddressableSystem
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
                 FirebaseAddressablesManager.IsFirebaseSetupFinished = true;
-                DataManager.Instance.StartCoroutine(IELoad());
+                state = eAddressableState.Initialized;
+                //해당 부분은 고민이 필요함 . Data Manager에게 넘길지 아니면 그냥 처리할지 .
+                LoadAsync().Forget();
+                //DataManager.Instance.RunTask(LoadAsync());
             }
             else
                 UnityEngine.Debug.LogError(System.String.Format(
@@ -33,119 +39,111 @@ public class AddressableSystem
     }
 
     #region Addressable Method
-    IEnumerator IELoad()
+    async UniTask LoadAsync()
     {
-        state = eAddressableState.FindPatch;
-        var cachePaths = new List<string>();
-        Caching.GetAllCachePaths(cachePaths);
-        //foreach (var cachePath in cachePaths)
-        //{
-        //    EditorDebug.Log($"Cache path: {cachePath}");
-        //}
-
-        // Caching.ClearCache();
-
-        yield return IECatalogCheck();
-        while (state == eAddressableState.FindPatch)
-            yield return null;
-
-        if (state != eAddressableState.LoadMemory)
-            yield return IEDownloadAsset();
-        else
-            yield return IELoadMemory();
-        IsLoad = true;
-    }
-    IEnumerator IECatalogCheck()
-    {
-        AsyncOperationHandle<List<string>> checkForUpdateHandle = Addressables.CheckForCatalogUpdates();
-        yield return checkForUpdateHandle;
-        List<string> catalogsToUpdate = checkForUpdateHandle.Result;
-        if (catalogsToUpdate.Count > 0)
+        try
         {
-            Debug.LogWarning("UpdateCatalogsStart");
-            AsyncOperationHandle<List<IResourceLocator>> updateHandle = Addressables.UpdateCatalogs(catalogsToUpdate, true);
-            yield return updateHandle;
-            Debug.LogWarning("UpdateCatalogsEnd");
-            state = eAddressableState.FoundSize;
-        }
-        else
-            state = eAddressableState.LoadMemory;
-        yield return null;
-        Addressables.Release(checkForUpdateHandle);
-    }
-    IEnumerator IEDownloadAsset()
-    {
-        Debug.Log("-- 어드레서블 DownloadAsset --");
+            #region Cache Method
+            //var cachePaths = new List<string>();
+            //Caching.GetAllCachePaths(cachePaths);
+            //foreach (var cachePath in cachePaths)
+            //{
+            //    Debug.Log($"Cache path: {cachePath}");
+            //}
+            //Caching.ClearCache();
+            #endregion
+            await CatalogCheckAsync();
 
-        state = eAddressableState.FoundSize;
+            if (state == eAddressableState.FindPatch)
+                await DownloadAssetAsync();
+            else
+                await LoadMemoryAsync();
+
+            state = eAddressableState.Complete;
+            IsLoad = true;
+        }
+        catch(Exception ex)
+        {
+            Debug.LogError($"An error occurred during the LoadAsync: {ex.Message}");
+        }
+    }
+    async UniTask CatalogCheckAsync()
+    {
+        try
+        {
+            AsyncOperationHandle<List<string>> checkForUpdateHandle = Addressables.CheckForCatalogUpdates();
+            await checkForUpdateHandle.ToUniTask();
+
+            List<string> catalogsToUpdate = checkForUpdateHandle.Result;
+            if (catalogsToUpdate.Count > 0)
+            {
+                AsyncOperationHandle<List<IResourceLocator>> updateHandle = Addressables.UpdateCatalogs(catalogsToUpdate, true);
+                await updateHandle.ToUniTask();
+                state = eAddressableState.FindPatch;
+            }
+            else
+                state = eAddressableState.LoadMemory;
+        }
+        catch(Exception ex)
+        {
+            Debug.LogError($"An error occurred during the catalog check: {ex.Message}");
+        }   
+    }
+
+    async UniTask DownloadAssetAsync()
+    {
         AsyncOperationHandle operationHandle = Addressables.DownloadDependenciesAsync("default");
         state = eAddressableState.Downloading;
-        yield return operationHandle;
+        await operationHandle.ToUniTask();
         AssetBundle.UnloadAllAssetBundles(true);
         Addressables.Release(operationHandle);
-        yield return IELoadMemory();
+        await LoadMemoryAsync();    
     }
-    IEnumerator IELoadMemory()
+    async UniTask LoadMemoryAsync()
     {
         state = eAddressableState.LoadMemory;
         AsyncOperationHandle<IResourceLocator> locatorHandle = Addressables.InitializeAsync(true);
-        yield return locatorHandle;
+        await locatorHandle.ToUniTask();
 
-        yield return IELoadModelMemory();
+        await LoadModelMemoryAsync();
+        state = eAddressableState.Complete;
     }
-    Dictionary<string, GameObject> _modelContainer = new Dictionary<string, GameObject>();
-    IEnumerator IELoadModelMemory()
+    async UniTask LoadModelMemoryAsync()
     {
-        state = eAddressableState.IconMemory;
+        state = eAddressableState.ModelMemory;
 
-        AsyncOperationHandle<IList<IResourceLocation>> locationList = Addressables.LoadResourceLocationsAsync("Model", null);
-        yield return null;
-        int taskCount = 0;
-        int jobCount = 0;
-        foreach (var location in locationList.Result)
+        AsyncOperationHandle<IList<IResourceLocation>> locationListHandle = Addressables.LoadResourceLocationsAsync("Model", null);
+        await locationListHandle.ToUniTask();
+
+        List<UniTask> loadingTasks = new List<UniTask>();
+        foreach (var location in locationListHandle.Result)
         {
             if (location.ResourceType != typeof(GameObject))
             {
-                ++jobCount;
-                yield return null;
                 continue;
             }
 
-
-            ++taskCount;
-            Addressables.LoadAssetAsync<GameObject>(location.PrimaryKey).Completed += task =>
+            var loadTask = Addressables.LoadAssetAsync<GameObject>(location.PrimaryKey).ToUniTask().ContinueWith(task =>
             {
-                _modelContainer.Add(location.PrimaryKey, task.Result);
-                --taskCount;
-                ++jobCount;
-                Debug.Log(task.Result.name);
-            };
+                  _modelContainer.Add(location.PrimaryKey, task);
+             });
+
+            loadingTasks.Add(loadTask);
         }
-        while (taskCount > 0)
-            yield return null;
-        Addressables.Release(locationList);
+
+        await UniTask.WhenAll(loadingTasks);
+        Addressables.Release(locationListHandle);
     }
     #endregion
 
 }
 enum eAddressableState
 {
-    Initialize,
+    None,
+    Initialized,
     FindPatch,
-    FoundSize,
     Downloading,
     LoadMemory,
+    ModelMemory,
     Complete,
-    IconMemory,
-    SpriteMemory,
-    SpineGUI,
-    Effect,
-    Quest,
-    Background,
-    Network,
-    IAP,
-    AdMob,
-    Notifications,
-    AppsFlyer,
-
 }
