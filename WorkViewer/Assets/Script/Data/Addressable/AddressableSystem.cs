@@ -15,6 +15,8 @@ public class AddressableSystem
     eAddressableState state;
     public bool IsLoad;
     Dictionary<string, GameObject> _modelContainer = new Dictionary<string, GameObject>();
+    Dictionary<string, TextAsset> _tableContainer = new Dictionary<string, TextAsset>();
+
     public void Initialize()
     {
         Addressables.ResourceManager.ResourceProviders.Add(new FirebaseStorageAssetBundleProvider());
@@ -106,6 +108,8 @@ public class AddressableSystem
         await locatorHandle.ToUniTask();
 
         await LoadModelMemoryAsync();
+        await LoadTableMemoryAsync();
+
         state = eAddressableState.Complete;
     }
     async UniTask LoadModelMemoryAsync()
@@ -134,6 +138,32 @@ public class AddressableSystem
         await UniTask.WhenAll(loadingTasks);
         Addressables.Release(locationListHandle);
     }
+    async UniTask LoadTableMemoryAsync()
+    {
+        state = eAddressableState.TableMemory;
+
+        AsyncOperationHandle<IList<IResourceLocation>> locationListHandle = Addressables.LoadResourceLocationsAsync("Table", null);
+        await locationListHandle.ToUniTask();
+
+        List<UniTask> loadingTasks = new List<UniTask>();
+        foreach (var location in locationListHandle.Result)
+        {
+            if (location.ResourceType != typeof(TextAsset))
+            {
+                continue;
+            }
+
+            var loadTask = Addressables.LoadAssetAsync<TextAsset>(location.PrimaryKey).ToUniTask().ContinueWith(task =>
+            {
+                _tableContainer.Add(location.PrimaryKey, task);
+            });
+
+            loadingTasks.Add(loadTask);
+        }
+
+        await UniTask.WhenAll(loadingTasks);
+        Addressables.Release(locationListHandle);
+    }
     #endregion
 
     #region Get
@@ -147,6 +177,16 @@ public class AddressableSystem
         Debug.LogError($"Model with resource path {key} not found in the model container.");
         return null;    
     }
+    public static TextAsset GetTable(string key)
+    {
+        if (DataManager.AddressableSystem._tableContainer.TryGetValue(key, out var database))
+        {
+            return database;
+        }
+
+        Debug.LogError($"Database with resource path {key} not found in the database container.");
+        return null;
+    }
     #endregion
 
 }
@@ -158,5 +198,6 @@ enum eAddressableState
     Downloading,
     LoadMemory,
     ModelMemory,
+    TableMemory,
     Complete,
 }

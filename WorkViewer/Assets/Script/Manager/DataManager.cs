@@ -10,12 +10,16 @@ public class DataManager : TSingletonMono<DataManager>
     public static LocalizingTable LocalizingTable;
     protected override void OnInitialize()
     {
-        AddressableSystem = new AddressableSystem();
         ModelTable = LoadTable<ModelTable>(eTableName.ModelTable);
         ModelTable.Reload();
         LocalizingTable = LoadTable<LocalizingTable>(eTableName.LocalizingTable);
         LocalizingTable.Reload();
         IsLoad = true;      
+    }
+    public void InitAddressableSystem()
+    {
+        AddressableSystem = new AddressableSystem();
+        AddressableSystem.Initialize();
     }
 
     public T LoadTable<T>(eTableName name, bool isReload = false) where T : TableBase, new()

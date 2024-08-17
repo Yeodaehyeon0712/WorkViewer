@@ -24,13 +24,13 @@ public class TitleScene : BaseScene
     {
         text_Description.text = "Waiting ... ";
         LocalizingManager.Instance.Initialize();
-        await UniTask.WaitUntil(() => LocalizingManager.Instance.IsLoad); 
+        await UniTask.WaitUntil(() => LocalizingManager.Instance.IsLoad);
+
+        DataManager.Instance.InitAddressableSystem();
+        await UniTask.WaitUntil(() => DataManager.AddressableSystem.IsLoad);
 
         DataManager.Instance.Initialize();
         await UniTask.WaitUntil(() => DataManager.Instance.IsLoad);
-
-        DataManager.AddressableSystem.Initialize();
-        await UniTask.WaitUntil(() => DataManager.AddressableSystem.IsLoad);
 
         Debug.Log("Title Scene Manager Init Complete");
         text_Description.text = "Press Start";

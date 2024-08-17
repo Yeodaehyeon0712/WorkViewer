@@ -99,6 +99,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Model
+    - Database
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 42206b7404e750f498c78f379619488e, type: 2}

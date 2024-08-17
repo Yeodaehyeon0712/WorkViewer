@@ -29,7 +29,7 @@ public abstract class TSingletonMono<T> : MonoBehaviour where T : TSingletonMono
 #endif
                 DontDestroyOnLoad(obj);
             _instance = obj.GetComponent<T>();
-            _instance.Initialize();
+            //_instance.Initialize();
             return _instance;
         }
     }

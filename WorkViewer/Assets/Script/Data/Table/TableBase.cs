@@ -13,8 +13,9 @@ public abstract class TableBase
     }
     protected abstract void OnLoad();
     protected void LoadData(string name)
-    {
-        TextAsset textAsset = Resources.Load<TextAsset>("Database/" + name);        
+    {      
+        TextAsset textAsset = AddressableSystem.GetTable($"Table/{name}.csv");
+
 #if UNITY_ANDROID
         string[] arr = textAsset.ToString().Split('\r');
 #elif UNITY_IOS
