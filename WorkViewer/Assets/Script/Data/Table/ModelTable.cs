@@ -33,6 +33,7 @@ public class ModelTable : TableBase
             if (_modelDataDic.ContainsKey(index))
                 return _modelDataDic[index];
 
+            Debug.LogError($"Model index {index} not found in the model table.");
             return null;
         }
     }

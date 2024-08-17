@@ -136,6 +136,19 @@ public class AddressableSystem
     }
     #endregion
 
+    #region Get
+    public static GameObject GetModel(string key)
+    {
+        if (DataManager.AddressableSystem._modelContainer.TryGetValue(key, out var model))
+        {
+            return model;
+        }
+
+        Debug.LogError($"Model with resource path {key} not found in the model container.");
+        return null;    
+    }
+    #endregion
+
 }
 enum eAddressableState
 {

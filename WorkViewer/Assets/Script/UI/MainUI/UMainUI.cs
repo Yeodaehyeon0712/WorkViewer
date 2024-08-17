@@ -46,7 +46,7 @@ public class UMainUI : UBaseUI
     #region Model Method
     void NextModel(bool isRight)
     {
-        ModelManager.Instance.NextModel(isRight).Forget();
+        ModelManager.Instance.NextModel(isRight);
     }
     #endregion
 
