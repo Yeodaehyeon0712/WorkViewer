@@ -7,6 +7,7 @@ public class LocalizingManager : TSingletonMono<LocalizingManager>,ISubject<eLan
 {
     private List<IObserver<eLanguage>> observers = new List<IObserver<eLanguage>>();
     eLanguage currentLanguage = eLanguage.English;
+    public static bool IsBeingDestroyed = false;
     public eLanguage CurrentLanguage
     {
         get => currentLanguage;
@@ -24,6 +25,10 @@ public class LocalizingManager : TSingletonMono<LocalizingManager>,ISubject<eLan
     protected override void OnInitialize()
     {
         IsLoad = true;
+    }
+    private void OnApplicationQuit()
+    {
+        IsBeingDestroyed = true;
     }
 
     #endregion

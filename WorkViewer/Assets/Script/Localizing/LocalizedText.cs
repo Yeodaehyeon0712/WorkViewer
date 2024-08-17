@@ -19,6 +19,8 @@ public class LocalizedText : MonoBehaviour,IObserver<eLanguage>
     }
     void OnDisable()
     {
+        if (LocalizingManager.IsBeingDestroyed) 
+            return;
         LocalizingManager.Instance.RemoveObserver(this);
     }
     #endregion
