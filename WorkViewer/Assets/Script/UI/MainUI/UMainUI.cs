@@ -19,7 +19,7 @@ public class UMainUI : UBaseUI
     #region Init
     protected override void InitReference()
     {      
-        btn_Setting = transform.Find("Btn_Setting").GetComponent<Button>();
+        btn_Setting = transform.Find("Panel_Title/Btn_Setting").GetComponent<Button>();
         btn_Setting.onClick.AddListener(OpenSetting);
         btn_LeftModel = transform.Find("Panel_NextModel/Btn_Left").GetComponent<Button>();
         btn_LeftModel.onClick.AddListener(() => { NextModel(isRight: false); });
