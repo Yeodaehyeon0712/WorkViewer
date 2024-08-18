@@ -11,6 +11,7 @@ public abstract class UMovableUI : UBaseUI
     RectTransform rectTransform;
     Vector2 canvasSize;
     CanvasGroup canvasGroup;
+    GameObject raycastBlock;
     #endregion
     protected override void InitReference()
     {
@@ -18,7 +19,18 @@ public abstract class UMovableUI : UBaseUI
         canvasSize = UIManager.Instance.GameUI.GetComponent<CanvasScaler>().referenceResolution;
         canvasGroup = GetComponent<CanvasGroup>();
         canvasGroup.interactable = false;
+        raycastBlock = transform.parent.Find("RaycastBlock").gameObject;
         SetFirstPosition();
+    }
+    public override void Disable()
+    {
+        base.Disable();
+        raycastBlock.SetActive(false);
+    }
+    public override void Enable()
+    {
+        base.Enable();
+        raycastBlock.SetActive(true);
     }
     protected override void OnRefresh()
     {
