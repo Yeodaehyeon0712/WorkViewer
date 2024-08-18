@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 [RequireComponent(typeof(TextMeshProUGUI))]
 
-public class LocalizedText : MonoBehaviour,IObserver<eLanguage>
+public class LocalizingText : MonoBehaviour,IObserver<eLanguage>
 {
     [SerializeField] int localIndex=0;
     TextMeshProUGUI text;
@@ -15,7 +15,7 @@ public class LocalizedText : MonoBehaviour,IObserver<eLanguage>
     void OnEnable()
     {
         LocalizingManager.Instance.AddObserver(this);
-        SetLocalizedText();
+        SetLocalizingText();
     }
     void OnDisable()
     {
@@ -26,16 +26,21 @@ public class LocalizedText : MonoBehaviour,IObserver<eLanguage>
     #endregion
 
     #region Localizing Method
-    void SetLocalizedText()
+    void SetLocalizingText()
     {
         text.text = LocalizingManager.Instance.GetLocalizing(localIndex);
+    }
+    public void SetLocalizingIndex(int index)
+    {
+        localIndex = index;
+        SetLocalizingText();
     }
     #endregion
 
     #region Observer Method
     public void OnNotify(eLanguage value)
     {
-        SetLocalizedText();
+        SetLocalizingText();
     }
     #endregion
 }

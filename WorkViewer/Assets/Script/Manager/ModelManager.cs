@@ -141,5 +141,9 @@ public class ModelManager : TSingletonMono<ModelManager>
         newModelIndex += isRight ? 1 : -1;
         LoadModelAsync(newModelIndex, addLast: isRight);
     }
+    public Model GetActiveModel()
+    {
+        return _middleNode.Value;
+    }
 
 }

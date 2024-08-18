@@ -5,24 +5,33 @@ using TMPro;
 
 public class UDescriptionUI : UMovableUI
 {
-    #region Variables
-    TextMeshProUGUI text_Name;
-    TextMeshProUGUI text_MadeBy;
-    TextMeshProUGUI text_Description;
+    #region Fields
+    LocalizingText text_Name;
+    LocalizingText text_MadeBy;
+    LocalizingText text_Description;
     Button btn_Exit;
-    //VariableLocalizedString local_Name;
-
 
     #endregion
     protected override void InitReference()
     {
         base.InitReference();
-        //local_Name = transform.Find("Panel_Description/Text_Name").GetComponent<VariableLocalizedString>();
-        //local_Name.InitReference();
-        SetData();
+        var panel = transform.Find("Panel_Description");
+        text_Name = panel.Find("Text_Name").GetComponent<LocalizingText>();
+        text_MadeBy=panel.Find("Text_MadeBy").GetComponent<LocalizingText>();
+        text_Description=panel.Find("Text_Description").GetComponent<LocalizingText>();
+        btn_Exit = panel.Find("Btn_Exit").GetComponent<Button>();
+        btn_Exit.onClick.AddListener(()=>MoveOut());
     }
-    void SetData()
+    public override void Enable()
     {
-        //local_Name.UpdateLocalizedString("UI_1");
+        base.Enable();
+        SetActiveModelDescription();
+    }
+    void SetActiveModelDescription()
+    {
+        var modelData = ModelManager.Instance.GetActiveModel().Data;
+        text_Name.SetLocalizingIndex((int)modelData.NameKey);
+        text_MadeBy.SetLocalizingIndex((int)modelData.MadeByKey);
+        text_Description.SetLocalizingIndex((int)modelData.DescriptionKey);
     }
 }
